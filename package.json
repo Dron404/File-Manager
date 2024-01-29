@@ -1,0 +1,22 @@
+{
+  "name": "file-manager",
+  "version": "1.0.0",
+  "description": "educational project for RS school",
+  "main": "/src/main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Dron404/File-Manager.git"
+  },
+  "keywords": [
+    "File_manager"
+  ],
+  "author": "Andrei Mashedo (@Dron404)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Dron404/File-Manager/issues"
+  },
+  "homepage": "https://github.com/Dron404/File-Manager#readme"
+}
