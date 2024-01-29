@@ -1,3 +1,3 @@
-# File-Manager
+# [File-Manager](https://github.com/AlreadyBored/nodejs-assignments/blob/main/assignments/file-manager/assignment.md)
 
-# Pet project for RS school (https://rs.school/nodejs/)
+# Pet project for [RSSchool](https://rs.school/nodejs/)
