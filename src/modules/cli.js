@@ -1,12 +1,14 @@
 import { stdin } from "process";
 
-export class Cli {
-  constructor(eventEmitter) {
+export default class Cli {
+  constructor(eventEmitter, state) {
+    this.state = state;
     this.in = stdin;
     this.eventEmitter = eventEmitter;
     this.in.on("data", (data) => {
       this.getCommand(data.toString().trim());
     });
+    this.eventEmitter.on("log", (e) => this.getLog(e));
   }
 
   getCommand(data) {
@@ -27,9 +29,17 @@ export class Cli {
           case data.startsWith("cd"):
             this.eventEmitter.emit("cd", data.substring(2).trim());
             break;
+          case data.startsWith("cat"):
+            this.eventEmitter.emit("cat", data.substring(3).trim());
+            break;
           default:
             console.log(`Invalid input: ${data}`);
         }
     }
+  }
+
+  getLog(e) {
+    if (e) console.log(`> Operation failed: ${e.message}`);
+    console.log("> You are currently in", this.state.currentDir);
   }
 }

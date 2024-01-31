@@ -1,5 +1,4 @@
 import { App } from "./app.js";
-import { stdin, stdout } from "process";
 
 const args = process.argv.slice(2);
 let userName = "";
