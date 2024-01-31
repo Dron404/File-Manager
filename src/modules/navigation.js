@@ -8,7 +8,10 @@ export class Navigation {
     this.state = state;
     this.eventEmitter.on("up", () => this.goUpper());
     this.eventEmitter.on("ls", async () => await this.getList());
-    this.eventEmitter.on("cd", (args) => this.openDit(args));
+    this.eventEmitter.on(
+      "cd",
+      async (args) => await this.changeDirectory(args)
+    );
   }
 
   goUpper() {
@@ -26,8 +29,7 @@ export class Navigation {
     const files = [];
     try {
       const data = await readdir(this.state.currentDir);
-      console.log(data);
-      const x = await Promise.all(
+      await Promise.all(
         data.map(async (file) => {
           const stats = await stat(`${this.state.currentDir}/${file}`);
           stats.isDirectory()
@@ -40,17 +42,28 @@ export class Navigation {
       console.table([...dir, ...files]);
       this.getLog();
     } catch (e) {
-      console.log(e);
-      this.getErrorLog();
+      this.getLog(e);
     }
   }
 
-  openDit(path) {}
-
-  getLog() {
-    console.log("> You are currently in", this.state.currentDir);
+  async changeDirectory(path) {
+    const checkDirPath = resolve(this.state.currentDir, path);
+    console.log(checkDirPath);
+    try {
+      const stats = await stat(checkDirPath);
+      if (stats.isDirectory()) {
+        this.state.currentDir = checkDirPath;
+        this.getLog();
+        return;
+      }
+      throw new Error();
+    } catch (e) {
+      this.getLog(e);
+    }
   }
-  getErrorLog() {
-    console.log("> Operation failed");
+
+  getLog(e) {
+    if (e) console.log(`> Operation failed: ${e.message}`);
+    console.log("> You are currently in", this.state.currentDir);
   }
 }

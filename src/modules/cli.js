@@ -11,6 +11,8 @@ export class Cli {
 
   getCommand(data) {
     switch (data) {
+      case "":
+        break;
       case ".exit":
         process.emit("SIGINT");
         break;
@@ -21,7 +23,13 @@ export class Cli {
         this.eventEmitter.emit("ls");
         break;
       default:
-        console.log(`Invalid input: ${data}`);
+        switch (true) {
+          case data.startsWith("cd"):
+            this.eventEmitter.emit("cd", data.substring(2).trim());
+            break;
+          default:
+            console.log(`Invalid input: ${data}`);
+        }
     }
   }
 }
