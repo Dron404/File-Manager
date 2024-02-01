@@ -1,6 +1,7 @@
 import os from "os";
-import { stat, readdir } from "fs/promises";
+import { stat } from "fs/promises";
 import { resolve } from "path";
+import { getDirFiles } from "../helpers/getDirFiles.js";
 
 export default class Navigation {
   constructor(eventEmitter, state) {
@@ -20,25 +21,15 @@ export default class Navigation {
         .split("/")
         .slice(0, -1)
         .join("/");
+      this.eventEmitter.emit("log");
+    } else {
+      this.eventEmitter.emit("log", new Error("You are in the root directory"));
     }
-    this.eventEmitter.emit("log");
   }
 
   async getList() {
-    const dir = [];
-    const files = [];
     try {
-      const data = await readdir(this.state.currentDir);
-      await Promise.all(
-        data.map(async (file) => {
-          const stats = await stat(`${this.state.currentDir}/${file}`);
-          if (stats.isDirectory()) {
-            dir.push({ Name: file, Type: "directory" });
-          } else {
-            files.push({ Name: `${file}`, Type: "file" });
-          }
-        })
-      );
+      const { dir, files } = await getDirFiles(this.state.currentDir);
       dir.sort((a, b) => a.Name - b.Name);
       files.sort((a, b) => a.Name - b.Name);
       console.table([...dir, ...files]);

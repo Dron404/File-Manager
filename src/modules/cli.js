@@ -15,7 +15,7 @@ export default class Cli {
 
   getCommand(data) {
     if (!this.state.name) {
-      if (data) {
+      if (data.trim()) {
         this.state.name = data;
         console.log(`> Welcome to the File Manager, ${this.state.name}!`);
         this.eventEmitter.emit("log");
@@ -39,14 +39,22 @@ export default class Cli {
         break;
       default:
         switch (true) {
-          case data.startsWith("cd"):
+          case data.match(/^cd\s+[\p{L}\d]+/iu) !== null:
             this.eventEmitter.emit("cd", data.substring(2).trim());
             break;
-          case data.startsWith("cat"):
+          case data.match(/^cat\s+[\p{L}\d]+/iu) !== null:
             this.eventEmitter.emit("cat", data.substring(3).trim());
             break;
-          case data.startsWith("add"):
+          case data.match(/^add\s+[\p{L}\d]+/iu) !== null:
             this.eventEmitter.emit("add", data.substring(3).trim());
+            break;
+          case data.match(/^rn\s+[\p{L}\d]+/iu) !== null &&
+            data.substring(2).trim().split(/\s+/).length == 2:
+            this.eventEmitter.emit("rn", data.substring(2).trim());
+            break;
+          case data.match(/^cp\s+[\p{L}\d]+/iu) !== null &&
+            data.substring(2).trim().split(/\s+/).length == 2:
+            this.eventEmitter.emit("cp", data.substring(2).trim());
             break;
           default:
             console.log(`Invalid input: ${data}`);
