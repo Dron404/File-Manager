@@ -8,7 +8,9 @@ export default class Cli {
     this.in.on("data", (data) => {
       this.getCommand(data.toString().trim());
     });
-    this.eventEmitter.on("log", (e) => this.getLog(e));
+    this.eventEmitter
+      .on("log", (e) => this.getLog(e))
+      .on("exit", () => this.exit());
   }
 
   getCommand(data) {
@@ -27,7 +29,7 @@ export default class Cli {
       case "":
         break;
       case ".exit":
-        process.emit("SIGINT");
+        this.eventEmitter.emit("exit");
         break;
       case "up":
         this.eventEmitter.emit("up");
@@ -43,6 +45,9 @@ export default class Cli {
           case data.startsWith("cat"):
             this.eventEmitter.emit("cat", data.substring(3).trim());
             break;
+          case data.startsWith("add"):
+            this.eventEmitter.emit("add", data.substring(3).trim());
+            break;
           default:
             console.log(`Invalid input: ${data}`);
         }
@@ -52,5 +57,16 @@ export default class Cli {
   getLog(e) {
     if (e) console.log(`> Operation failed: ${e.message}`);
     console.log("> You are currently in", this.state.currentDir);
+  }
+
+  exit() {
+    console.log(
+      `\n> Thank you for using File Manager, ${this.state.name}, goodbye!`
+    );
+    process.exit(0);
+  }
+
+  satHi() {
+    console.log(`> Welcome to the File Manager, ${this.state.name}!`);
   }
 }

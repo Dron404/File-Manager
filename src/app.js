@@ -11,6 +11,7 @@ export class App {
     this.cli = new Cli(this.eventEmitter, this.state);
     this.navigation = new Navigation(this.eventEmitter, this.state);
     this.fileManager = new FileManager(this.eventEmitter, this.state);
+    process.on("SIGINT", () => this.cli.exit());
   }
 
   start() {
@@ -18,13 +19,7 @@ export class App {
       console.log("> Enter your name");
       return;
     }
-    console.log(`> Welcome to the File Manager, ${this.state.name}!`);
+    this.cli.satHi();
     this.eventEmitter.emit("log");
-    process.on("SIGINT", () => {
-      console.log(
-        `\n> Thank you for using File Manager, ${this.state.name}, goodbye!`
-      );
-      process.exit(0);
-    });
   }
 }
