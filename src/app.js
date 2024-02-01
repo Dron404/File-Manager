@@ -14,6 +14,10 @@ export class App {
   }
 
   start() {
+    if (!this.state.name) {
+      console.log("> Enter your name");
+      return;
+    }
     console.log(`> Welcome to the File Manager, ${this.state.name}!`);
     this.eventEmitter.emit("log");
     process.on("SIGINT", () => {

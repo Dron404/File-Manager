@@ -12,6 +12,17 @@ export default class Cli {
   }
 
   getCommand(data) {
+    if (!this.state.name) {
+      if (data) {
+        this.state.name = data;
+        console.log(`> Welcome to the File Manager, ${this.state.name}!`);
+        this.eventEmitter.emit("log");
+        return;
+      }
+      console.log("> Enter your name");
+      return;
+    }
+
     switch (data) {
       case "":
         break;
