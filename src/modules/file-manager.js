@@ -1,6 +1,6 @@
 import { createReadStream, createWriteStream } from "fs";
 import { pipeline } from "node:stream/promises";
-import { stat, rename } from "fs/promises";
+import { stat, rename, unlink } from "fs/promises";
 import path, { resolve, basename } from "path";
 import { stdout } from "process";
 import { checkPath } from "../helpers/getDirFiles.js";
@@ -13,7 +13,10 @@ export default class FileManager {
       .on("cat", async (path) => await this.readFile(path))
       .on("add", async (path) => await this.createFile(path))
       .on("rn", async (data) => await this.renameFile(data))
-      .on("cp", async (data) => await this.copyFile(data));
+      .on("cp", async (data) => await this.copyFile(data))
+      .on("rm", async (path) => {
+        this.deleteFile(path);
+      });
   }
 
   async readFile(path) {
@@ -112,5 +115,18 @@ export default class FileManager {
 
   async moveFile(data) {}
 
-  async deleteFile(data) {}
+  async deleteFile(path) {
+    const targetFilePath = resolve(this.state.currentDir, path);
+    const stat = await checkPath(targetFilePath);
+    if (stat == "file") {
+      await unlink(targetFilePath);
+      this.eventEmitter.emit("log");
+      return;
+    }
+
+    this.eventEmitter.emit(
+      "log",
+      new Error(`${stat ? "Illegal operation on a directory" : "No such file"}`)
+    );
+  }
 }

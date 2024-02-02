@@ -1,19 +1,19 @@
 import { stat, readdir } from "fs/promises";
+import { resolve } from "path";
 
 export async function getDirFiles(path) {
-  const data = await readdir(path);
+  const data = await readdir(path, { withFileTypes: true });
   const dir = [];
   const files = [];
-  await Promise.all(
-    data.map(async (file) => {
-      const stats = await stat(`${path}/${file}`);
-      if (stats.isDirectory()) {
-        dir.push({ Name: file, Type: "directory" });
-      } else {
-        files.push({ Name: `${file}`, Type: "file" });
-      }
-    })
-  );
+
+  data.map((file) => {
+    if (file.isDirectory()) {
+      dir.push({ Name: file.name, Type: "directory" });
+    } else {
+      files.push({ Name: `${file.name}`, Type: "file" });
+    }
+  });
+
   return { files, dir };
 }
 

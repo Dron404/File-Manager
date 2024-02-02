@@ -39,6 +39,9 @@ export default class Cli {
         break;
       default:
         switch (true) {
+          case data.match(/^rm\s+[\p{L}\d]+/iu) !== null:
+            this.eventEmitter.emit("rm", data.substring(2).trim());
+            break;
           case data.match(/^cd\s+[\p{L}\d]+/iu) !== null:
             this.eventEmitter.emit("cd", data.substring(2).trim());
             break;

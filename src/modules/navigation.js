@@ -1,7 +1,7 @@
-import os from "os";
-import { stat } from "fs/promises";
+import { stat, readdir } from "fs/promises";
 import { resolve } from "path";
 import { getDirFiles } from "../helpers/getDirFiles.js";
+import path from "path";
 
 export default class Navigation {
   constructor(eventEmitter, state) {
@@ -16,11 +16,8 @@ export default class Navigation {
   }
 
   goUpper() {
-    if (this.state.currentDir !== os.homedir()) {
-      this.state.currentDir = this.state.currentDir
-        .split("/")
-        .slice(0, -1)
-        .join("/");
+    if (this.state.currentDir !== path.resolve("/")) {
+      this.state.currentDir = path.dirname(this.state.currentDir);
       this.eventEmitter.emit("log");
     } else {
       this.eventEmitter.emit("log", new Error("You are in the root directory"));
