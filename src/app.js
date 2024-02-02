@@ -15,7 +15,8 @@ export class App {
     this.fileManager = new FileManager(this.eventEmitter, this.state);
     this.os = new OperatingSystem(this.eventEmitter, this.state);
     this.Hash = new Hash(this.eventEmitter, this.state);
-    process.on("SIGINT", () => this.cli.exit());
+    process.on("SIGINT", () => this.exit());
+    this.eventEmitter.on(".exit", () => this.exit());
   }
 
   start() {
@@ -25,5 +26,11 @@ export class App {
     }
     this.cli.satHi();
     this.eventEmitter.emit("log");
+  }
+  exit() {
+    console.log(
+      `\n> Thank you for using File Manager, ${this.state.name}, goodbye!`
+    );
+    process.exit(0);
   }
 }

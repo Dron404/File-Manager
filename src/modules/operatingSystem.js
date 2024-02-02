@@ -35,7 +35,7 @@ export default class OperatingSystem {
   }
 
   getArchitecture() {
-    console.log("> " + process.arch);
+    console.log("> " + os.arch());
     this.eventEmitter.emit("log");
   }
 }

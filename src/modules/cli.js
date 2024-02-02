@@ -8,9 +8,7 @@ export default class Cli {
     this.in.on("data", (data) => {
       this.getCommand(data.toString().trim());
     });
-    this.eventEmitter
-      .on("log", (e) => this.getLog(e))
-      .on("exit", () => this.exit());
+    this.eventEmitter.on("log", (e) => this.getLog(e));
 
     this.osOptions = {
       "--EOL": "EOL",
@@ -25,15 +23,17 @@ export default class Cli {
     // if you try run the app by npm run start, code will force you to enter a name. After which the application will work : )
     if (!this.state.name) {
       switch (true) {
-        case data.trim() && (this.state.name = data):
+        case data.trim() != "":
+          this.state.name = data;
           console.log(`> Welcome to the File Manager, ${this.state.name}!`);
           this.eventEmitter.emit("log");
-          break;
+          return;
         default:
           console.log("> Enter your name");
       }
       return;
     }
+
     switch (data) {
       case "":
         break;
@@ -64,13 +64,6 @@ export default class Cli {
   getLog(e) {
     if (e) console.log(`> Operation failed: ${e.message}`);
     console.log("> You are currently in", this.state.currentDir);
-  }
-
-  exit() {
-    console.log(
-      `\n> Thank you for using File Manager, ${this.state.name}, goodbye!`
-    );
-    process.exit(0);
   }
 
   satHi() {
