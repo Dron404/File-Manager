@@ -17,18 +17,17 @@ export async function getDirFiles(path) {
   return { files, dir };
 }
 
-export async function getStats (path) {
-
+export async function checkPath(path) {
   try {
-      const stats = await stat(path);
-      if (stats.isDirectory()) {
-        return 'dir'
-      } else {
-        return 'file'
-      }
-    } catch (e) {
-      if (e.code === "ENOENT") {
-      return null
-      }}
+    const stats = await stat(path);
+    if (stats.isDirectory()) {
+      return "directory";
+    } else {
+      return "file";
+    }
+  } catch (e) {
+    if (e.code === "ENOENT") {
+      return null;
+    }
+  }
 }
-
