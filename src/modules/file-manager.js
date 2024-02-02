@@ -17,10 +17,18 @@ export default class FileManager {
 
   async readFile(path) {
     const filePath = resolve(this.state.currentDir, path);
+    let hasData = false;
     createReadStream(filePath)
       .on("data", (data) => {
+        hasData = true;
         stdout.write(data.toString() + "\n");
         this.eventEmitter.emit("log");
+      })
+      .on("end", () => {
+        if (!hasData) {
+          console.log("File is empty");
+          this.eventEmitter.emit("log");
+        }
       })
       .on("error", (e) => {
         this.eventEmitter.emit("log", e);
