@@ -11,81 +11,49 @@ export default class Cli {
     this.eventEmitter
       .on("log", (e) => this.getLog(e))
       .on("exit", () => this.exit());
+
+    this.osOptions = {
+      "--EOL": "EOL",
+      "--cpus": "cpus",
+      "--homedir": "homedir",
+      "--username": "username",
+      "--architecture": "architecture",
+    };
   }
 
   getCommand(data) {
+    // if you try run the app by npm run start, code will force you to enter a name. After which the application will work : )
     if (!this.state.name) {
-      if (data.trim()) {
-        this.state.name = data;
-        console.log(`> Welcome to the File Manager, ${this.state.name}!`);
-        this.eventEmitter.emit("log");
-        return;
+      switch (true) {
+        case data.trim() && (this.state.name = data):
+          console.log(`> Welcome to the File Manager, ${this.state.name}!`);
+          this.eventEmitter.emit("log");
+          break;
+        default:
+          console.log("> Enter your name");
       }
-      console.log("> Enter your name");
       return;
     }
-
     switch (data) {
       case "":
         break;
       case ".exit":
-        this.eventEmitter.emit("exit");
-        break;
       case "up":
-        this.eventEmitter.emit("up");
-        break;
       case "ls":
-        this.eventEmitter.emit("ls");
+        this.eventEmitter.emit(data);
         break;
       default:
+        const match = data.match(/^(rm|hash|cd|cat|add|rn|cp|mv)\s+(.+)/u);
         switch (true) {
-          case data.match(/^rm\s+.+/u) !== null:
-            this.eventEmitter.emit("rm", data.substring(2).trim());
-            break;
-          case data.match(/^hash\s+.+/u) !== null:
-            this.eventEmitter.emit("hash", data.substring(4).trim());
-            break;
-          case data.match(/^cd\s+.+/u) !== null:
-            this.eventEmitter.emit("cd", data.substring(2).trim());
-            break;
-          case data.match(/^cat\s+.+/u) !== null:
-            this.eventEmitter.emit("cat", data.substring(3).trim());
-            break;
-          case data.match(/^add\s+.+/u) !== null:
-            this.eventEmitter.emit("add", data.substring(3).trim());
-            break;
-          case data.match(/^rn\s+.+/u) !== null &&
-            data.substring(2).trim().split(/\s+/).length == 2:
-            this.eventEmitter.emit("rn", data.substring(2).trim());
-            break;
-          case data.match(/^cp\s+.+/u) !== null &&
-            data.substring(2).trim().split(/\s+/).length == 2:
-            this.eventEmitter.emit("cp", data.substring(2).trim());
-            break;
-          case data.match(/^mv\s+.+/u) !== null &&
-            data.substring(2).trim().split(/\s+/).length == 2:
-            this.eventEmitter.emit("mv", data.substring(2).trim());
+          case match !== null:
+            const [, command, argument] = match;
+            this.eventEmitter.emit(command, argument);
             break;
           case data.startsWith("os"):
-            switch (data.substring(2).trim()) {
-              case "--EOL":
-                this.eventEmitter.emit("EOL");
-                break;
-              case "--cpus":
-                this.eventEmitter.emit("cpus");
-                break;
-              case "--homedir":
-                this.eventEmitter.emit("homedir");
-                break;
-              case "--username":
-                this.eventEmitter.emit("username");
-                break;
-              case "--architecture":
-                this.eventEmitter.emit("architecture");
-                break;
-              default:
-                console.log(`Invalid input: ${data}`);
-            }
+            const option = data.substring(2).trim();
+            this.osOptions[option]
+              ? this.eventEmitter.emit(this.osOptions[option])
+              : console.log(`Invalid input: ${data}`);
             break;
           default:
             console.log(`Invalid input: ${data}`);
