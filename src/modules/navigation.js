@@ -1,4 +1,4 @@
-import { stat, readdir } from "fs/promises";
+import { stat } from "fs/promises";
 import { resolve } from "path";
 import { getDirFiles } from "../helpers/getDirFiles.js";
 import path from "path";

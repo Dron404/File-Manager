@@ -1,5 +1,4 @@
 import { stat, readdir } from "fs/promises";
-import { resolve } from "path";
 
 export async function getDirFiles(path) {
   const data = await readdir(path, { withFileTypes: true });

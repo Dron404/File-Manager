@@ -1,5 +1,4 @@
 import { App } from "./app.js";
-import path from "path";
 
 const args = process.argv.slice(2);
 let userName = "";
