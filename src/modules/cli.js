@@ -39,27 +39,30 @@ export default class Cli {
         break;
       default:
         switch (true) {
-          case data.match(/^rm\s+[\p{L}\d]+/iu) !== null:
+          case data.match(/^rm\s+.+/u) !== null:
             this.eventEmitter.emit("rm", data.substring(2).trim());
             break;
-          case data.match(/^cd\s+[\p{L}\d]+/iu) !== null:
+          case data.match(/^hash\s+.+/u) !== null:
+            this.eventEmitter.emit("hash", data.substring(4).trim());
+            break;
+          case data.match(/^cd\s+.+/u) !== null:
             this.eventEmitter.emit("cd", data.substring(2).trim());
             break;
-          case data.match(/^cat\s+[\p{L}\d]+/iu) !== null:
+          case data.match(/^cat\s+.+/u) !== null:
             this.eventEmitter.emit("cat", data.substring(3).trim());
             break;
-          case data.match(/^add\s+[\p{L}\d]+/iu) !== null:
+          case data.match(/^add\s+.+/u) !== null:
             this.eventEmitter.emit("add", data.substring(3).trim());
             break;
-          case data.match(/^rn\s+[\p{L}\d]+/iu) !== null &&
+          case data.match(/^rn\s+.+/u) !== null &&
             data.substring(2).trim().split(/\s+/).length == 2:
             this.eventEmitter.emit("rn", data.substring(2).trim());
             break;
-          case data.match(/^cp\s+[\p{L}\d]+/iu) !== null &&
+          case data.match(/^cp\s+.+/u) !== null &&
             data.substring(2).trim().split(/\s+/).length == 2:
             this.eventEmitter.emit("cp", data.substring(2).trim());
             break;
-          case data.match(/^mv\s+[\p{L}\d]+/iu) !== null &&
+          case data.match(/^mv\s+.+/u) !== null &&
             data.substring(2).trim().split(/\s+/).length == 2:
             this.eventEmitter.emit("mv", data.substring(2).trim());
             break;

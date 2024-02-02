@@ -4,6 +4,7 @@ import Navigation from "./modules/navigation.js";
 import State from "./modules/state.js";
 import FileManager from "./modules/file-manager.js";
 import OperatingSystem from "./modules/operatingSystem.js";
+import Hash from "./modules/hash.js";
 
 export class App {
   constructor(name) {
@@ -12,7 +13,8 @@ export class App {
     this.cli = new Cli(this.eventEmitter, this.state);
     this.navigation = new Navigation(this.eventEmitter, this.state);
     this.fileManager = new FileManager(this.eventEmitter, this.state);
-    this.os = new OperatingSystem(this.eventEmitter);
+    this.os = new OperatingSystem(this.eventEmitter, this.state);
+    this.Hash = new Hash(this.eventEmitter, this.state);
     process.on("SIGINT", () => this.cli.exit());
   }
 
