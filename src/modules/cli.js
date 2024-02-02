@@ -63,6 +63,27 @@ export default class Cli {
             data.substring(2).trim().split(/\s+/).length == 2:
             this.eventEmitter.emit("mv", data.substring(2).trim());
             break;
+          case data.startsWith("os"):
+            switch (data.substring(2).trim()) {
+              case "--EOL":
+                this.eventEmitter.emit("EOL");
+                break;
+              case "--cpus":
+                this.eventEmitter.emit("cpus");
+                break;
+              case "--homedir":
+                this.eventEmitter.emit("homedir");
+                break;
+              case "--username":
+                this.eventEmitter.emit("username");
+                break;
+              case "--architecture":
+                this.eventEmitter.emit("architecture");
+                break;
+              default:
+                console.log(`Invalid input: ${data}`);
+            }
+            break;
           default:
             console.log(`Invalid input: ${data}`);
         }
