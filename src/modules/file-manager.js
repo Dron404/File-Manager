@@ -13,10 +13,11 @@ export default class FileManager {
       .on("cat", async (path) => await this.readFile(path))
       .on("add", async (path) => await this.createFile(path))
       .on("rn", async (data) => await this.renameFile(data))
-      .on("cp", async (data) => await this.copyFile(data))
+      .on("cp", async (data) => await this.copyFile(data, true))
       .on("rm", async (path) => {
-        this.deleteFile(path);
-      });
+        await this.deleteFile(path);
+      })
+      .on("mv", async (data) => await this.moveFile(data));
   }
 
   async readFile(path) {
@@ -77,21 +78,21 @@ export default class FileManager {
     }
   }
 
-  async copyFile(data) {
+  async copyFile(data, log) {
     const [file, dir] = data.split(/\s+/);
     const pathToSourceFile = resolve(this.state.currentDir, file);
     const pathToDestDir = resolve(this.state.currentDir, dir);
     const fileName = basename(pathToSourceFile);
     if ((await checkPath(pathToSourceFile)) !== "file") {
       this.eventEmitter.emit("log", new Error("Scourge file - No such file"));
-      return;
+      return false;
     }
     if ((await checkPath(pathToDestDir)) !== "directory") {
       this.eventEmitter.emit(
         "log",
         new Error(`Destination directory - No such directory`)
       );
-      return;
+      return false;
     }
     if (await checkPath(`${pathToDestDir}/${fileName}`)) {
       this.eventEmitter.emit(
@@ -100,20 +101,28 @@ export default class FileManager {
           `Destination directory already have ${fileName} file or directory`
         )
       );
-      return;
+      return false;
     }
     try {
       await pipeline(
         createReadStream(pathToSourceFile),
         createWriteStream(`${pathToDestDir}/${fileName}`)
       );
-      this.eventEmitter.emit("log");
+      if (log) this.eventEmitter.emit("log");
+      return true;
     } catch (e) {
       this.eventEmitter.emit("log", e);
+      return false;
     }
   }
 
-  async moveFile(data) {}
+  async moveFile(data) {
+    const [file] = data.split(/\s+/);
+    const isCopy = await this.copyFile(data); //!<---- copyFile using Readable and Writable streams :)
+    if (isCopy) {
+      await this.deleteFile(file);
+    }
+  }
 
   async deleteFile(path) {
     const targetFilePath = resolve(this.state.currentDir, path);
@@ -123,7 +132,6 @@ export default class FileManager {
       this.eventEmitter.emit("log");
       return;
     }
-
     this.eventEmitter.emit(
       "log",
       new Error(`${stat ? "Illegal operation on a directory" : "No such file"}`)

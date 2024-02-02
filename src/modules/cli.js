@@ -59,6 +59,10 @@ export default class Cli {
             data.substring(2).trim().split(/\s+/).length == 2:
             this.eventEmitter.emit("cp", data.substring(2).trim());
             break;
+          case data.match(/^mv\s+[\p{L}\d]+/iu) !== null &&
+            data.substring(2).trim().split(/\s+/).length == 2:
+            this.eventEmitter.emit("mv", data.substring(2).trim());
+            break;
           default:
             console.log(`Invalid input: ${data}`);
         }
