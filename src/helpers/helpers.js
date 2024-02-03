@@ -6,11 +6,13 @@ export async function getDirFiles(path) {
   const files = [];
 
   data.map((file) => {
-    if (file.isDirectory()) {
-      dir.push({ Name: file.name, Type: "directory" });
-    } else {
-      files.push({ Name: `${file.name}`, Type: "file" });
-    }
+    try {
+      if (file.isDirectory()) {
+        dir.push({ Name: file.name, Type: "directory" });
+      } else {
+        files.push({ Name: `${file.name}`, Type: "file" });
+      }
+    } catch (e) {}
   });
 
   return { files, dir };

@@ -9,12 +9,25 @@
 
 ### to access files with spaces in the name you need to use " "
 
+### для доступа к файлам с пробелами в имени нужно использовать " "
+
 - add "new file"
 - cat "new file"
 - rn "new file" new_file
 - mv new_file "new dir"
 - rm "new dri/new_file"
 - cd "new dir"
+
+### compressing/decompressing
+
+- first argument is the path to the file, the second is the path to the directory
+- the file name will be inherited from the parent file
+
+### сжатие/распаковка
+
+- первый аргумент — путь к файлу, второй — путь к каталогу
+
+- имя файла будет унаследовано от родительского файла
 
 # Assignment: File Manager
 

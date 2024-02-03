@@ -44,7 +44,9 @@ export default class Cli {
         break;
       default:
         const onePathCommand = data.match(/^(rm|hash|cd|cat|add)\s+(.+)/u);
-        const twoPathCommand = data.match(/^(rn|cp|mv)\s+(.+)/u);
+        const twoPathCommand = data.match(
+          /^(rn|cp|mv|compress|decompress)\s+(.+)/u
+        );
         let command, args;
         switch (true) {
           case onePathCommand !== null:

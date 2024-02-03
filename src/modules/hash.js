@@ -1,7 +1,7 @@
 import { resolve } from "path";
 import { createHash } from "crypto";
 import { readFile } from "fs/promises";
-import { checkPath } from "../helpers/getDirFiles.js";
+import { checkPath } from "../helpers/helpers.js";
 
 export default class Hash {
   constructor(eventEmitter, state) {

@@ -5,6 +5,7 @@ import State from "./modules/state.js";
 import FileManager from "./modules/file-manager.js";
 import OperatingSystem from "./modules/operatingSystem.js";
 import Hash from "./modules/hash.js";
+import FileCompressor from "./modules/compressor.js";
 
 export class App {
   constructor(name) {
@@ -15,6 +16,7 @@ export class App {
     this.fileManager = new FileManager(this.eventEmitter, this.state);
     this.os = new OperatingSystem(this.eventEmitter, this.state);
     this.Hash = new Hash(this.eventEmitter, this.state);
+    this.fileCompressor = new FileCompressor(this.eventEmitter, this.state);
     process.on("SIGINT", () => this.exit());
     this.eventEmitter.on(".exit", () => this.exit());
   }

@@ -20,6 +20,7 @@ export default class OperatingSystem {
     const cupsData = os.cpus().map((cpu) => {
       return { model: cpu.model, GHz: (cpu.speed / 1000).toFixed(4) };
     });
+    console.log("overall amount of CPUS: " + cupsData.length);
     console.table(cupsData);
     this.eventEmitter.emit("log");
   }

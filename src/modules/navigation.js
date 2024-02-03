@@ -1,6 +1,6 @@
 import { stat } from "fs/promises";
 import { resolve } from "path";
-import { getDirFiles } from "../helpers/getDirFiles.js";
+import { getDirFiles } from "../helpers/helpers.js";
 import path from "path";
 
 export default class Navigation {

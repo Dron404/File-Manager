@@ -3,7 +3,7 @@ import { pipeline } from "node:stream/promises";
 import { stat, rename, unlink } from "fs/promises";
 import path, { resolve, basename } from "path";
 import { stdout } from "process";
-import { checkPath } from "../helpers/getDirFiles.js";
+import { checkPath } from "../helpers/helpers.js";
 
 export default class FileManager {
   constructor(eventEmitter, state) {
