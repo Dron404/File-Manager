@@ -57,12 +57,11 @@ export default class FileManager {
     );
   }
   async renameFile(data) {
-    const [filePath, newName] = data.split(/\s+/);
-    const targetFilePath = resolve(this.state.currentDir, filePath);
-    const directory = path.dirname(targetFilePath);
-    const newFilePath = path.join(directory, newName);
-
     try {
+      const [filePath, newName] = data;
+      const targetFilePath = resolve(this.state.currentDir, filePath);
+      const directory = path.dirname(targetFilePath);
+      const newFilePath = path.join(directory, newName);
       const stats = await stat(targetFilePath);
       if (stats.isDirectory()) {
         this.eventEmitter.emit(
@@ -79,7 +78,7 @@ export default class FileManager {
   }
 
   async copyFile(data, log) {
-    const [file, dir] = data.split(/\s+/);
+    const [file, dir] = data;
     const pathToSourceFile = resolve(this.state.currentDir, file);
     const pathToDestDir = resolve(this.state.currentDir, dir);
     const fileName = basename(pathToSourceFile);
@@ -117,7 +116,7 @@ export default class FileManager {
   }
 
   async moveFile(data) {
-    const [file] = data.split(/\s+/);
+    const [file] = data;
     const isCopy = await this.copyFile(data); //!<---- copyFile using Readable and Writable streams :)
     if (isCopy) {
       await this.deleteFile(file);

@@ -43,11 +43,33 @@ export default class Cli {
         this.eventEmitter.emit(data);
         break;
       default:
-        const match = data.match(/^(rm|hash|cd|cat|add|rn|cp|mv)\s+(.+)/u);
+        const onePathCommand = data.match(/^(rm|hash|cd|cat|add)\s+(.+)/u);
+        const twoPathCommand = data.match(/^(rn|cp|mv)\s+(.+)/u);
+        let command, args;
         switch (true) {
-          case match !== null:
-            const [, command, argument] = match;
-            this.eventEmitter.emit(command, argument);
+          case onePathCommand !== null:
+            [, command, args] = onePathCommand;
+            const path = this.getPaths(args);
+            if (path.length > 1) {
+              console.log(
+                `Invalid input: to access files with spaces in the name you need to use " " --> ${command} "${path.join(
+                  " "
+                )}"`
+              );
+              break;
+            }
+            this.eventEmitter.emit(command, path[0]);
+            break;
+          case twoPathCommand !== null:
+            [, command, args] = twoPathCommand;
+            const paths = this.getPaths(args);
+            if (paths.length != 2) {
+              console.log(
+                `Invalid input: to access files with spaces in the name you need to use " " --> ${command} path_one "path two"`
+              );
+              break;
+            }
+            this.eventEmitter.emit(command, this.getPaths(args));
             break;
           case data.startsWith("os"):
             const option = data.substring(2).trim();
@@ -57,6 +79,7 @@ export default class Cli {
             break;
           default:
             console.log(`Invalid input: ${data}`);
+            this.eventEmitter.emit("log");
         }
     }
   }
@@ -66,7 +89,19 @@ export default class Cli {
     console.log("> You are currently in", this.state.currentDir);
   }
 
-  satHi() {
+  sayHi() {
     console.log(`> Welcome to the File Manager, ${this.state.name}!`);
+  }
+
+  getPaths(data) {
+    const paths = [];
+    const regex = /"([^"]+)"|'([^']+)'|(\S+)/g;
+    let match;
+
+    while ((match = regex.exec(data)) !== null) {
+      const path = match[1] || match[2] || match[3];
+      paths.push(path);
+    }
+    return paths;
   }
 }

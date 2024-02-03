@@ -2,7 +2,19 @@
 
 # Pet project for [RSSchool](https://rs.school/nodejs/)
 
-#### strat - npm run start
+### Start:
+
+- npm run start
+- npm run start -- --username=${name}
+
+### to access files with spaces in the name you need to use " "
+
+- add "new file"
+- cat "new file"
+- rn "new file" new_file
+- mv new_file "new dir"
+- rm "new dri/new_file"
+- cd "new dir"
 
 # Assignment: File Manager
 

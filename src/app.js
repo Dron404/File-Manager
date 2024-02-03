@@ -24,7 +24,7 @@ export class App {
       console.log("> Enter your name");
       return;
     }
-    this.cli.satHi();
+    this.cli.sayHi();
     this.eventEmitter.emit("log");
   }
   exit() {
