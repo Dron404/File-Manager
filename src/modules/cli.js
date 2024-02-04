@@ -67,7 +67,11 @@ export default class Cli {
             const paths = this.getPaths(args);
             if (paths.length != 2) {
               console.log(
-                `Invalid input: to access files with spaces in the name you need to use " " --> ${command} path_one "path two"`
+                `Invalid input: ${
+                  paths.length > 2
+                    ? `to access files with spaces in the name you need to use " " --> ${command} path_one "path two"`
+                    : "expected 2 arguments"
+                }`
               );
               break;
             }
