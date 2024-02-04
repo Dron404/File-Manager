@@ -29,6 +29,16 @@
 
 - имя файла будет унаследовано от родительского файла
 
+### Modules - 8
+ - app
+ - file-manager
+ - cli
+ - compressor
+ - hash
+ - navigation
+ - operatingSystem
+ - state
+
 # Assignment: File Manager
 
 ## Description
