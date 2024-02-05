@@ -63,6 +63,15 @@ export default class FileManager {
       const directory = path.dirname(targetFilePath);
       const newFilePath = path.join(directory, newName);
       const stats = await stat(targetFilePath);
+
+      if (path.dirname(newFilePath) !== directory) {
+        this.eventEmitter.emit(
+          "log",
+          new Error("Paths are not in the same directory")
+        );
+        return;
+      }
+
       if (stats.isDirectory()) {
         this.eventEmitter.emit(
           "log",
